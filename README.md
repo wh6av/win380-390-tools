@@ -1,36 +1,45 @@
 MD380Tools Version
 How to update firmware and upload contacts.csv on Windows PC Machine
+
 Performed by Yoram Rotbach 4Z5YR, documented by Zvika Segal 4Z1ZV
+
 Foreword
-MD380 Tools is a firmware version for TYT MD380/390 radios that enable several new features.
-Key features are ability to monitor any traffic on a time slot, get on the fly contact information and some other nice to have features.
-This challenging project is being performed by Travis Goodspeed KK4VCZ and can be found on his web site: https://github.com/travisgoodspeed/md380tools
+
+MD380 Tools is a firmware version for TYT MD380/390 radios that enable several new features.  Key features are ability to monitor any traffic on a time slot, get on the fly contact information and some other nice to have features.  This challenging project is being performed by Travis Goodspeed KK4VCZ and can be found on his web site: https://github.com/travisgoodspeed/md380tools
+
 The most updated firmware can be found here at the bottom of the page: https://github.com/roelandjansen/md380tools/releases and can be uploaded to the radio using the Windows Firmware Loader of TYT for MD380/390. The contact.csv can be loaded only by UNIX and “UNIX like” operating system.
+
 Many thanks to Yoram Rotbach 4Z5YR who prepared a package of Debian Linux Virtual Machine that can run on a normal PC with Windows OS. The virtual player software is copyright of VMware http://www.vmware.com/products/player/playerpro-evaluation.html
+
 The menu system has been created and copyright by Gescio Oteco Alpuro WH6AV. This can be downloaded directly from https://github.com/wh6av/md380-radio (Remark: For the purpose of this compilation, some unnecessary menu items have been removed)
+
 This platform enables flashing the latest firmware as well as loading and updating the contacts.csv file on the radio.
 WARNING – CONTINUE AT YOUR OWN RISK!!
+
 Firmware update, either official or unofficial such as MD380Tools requires knowledge which is somewhat beyond basic skills. The virtual machine may not run on platforms where the CPU and/or BIOS are not capable of supporting virtualization (also known as VT-x) and may even cause the PC to hang up.
+
 In addition, loading the wrong firmware version to the radio (Old/New Vocoders, MD380/390 with or without GPS may cause weird behavior of the radio or even potentially brick it beyond repair.
+
 The creators of the solution and/or this document accept no liability to any such damage
+
 Step by step instruction how to run the Virtual Debian Linux machine:
- Download and install VMware player from here: https://www.dropbox.com/s/6v47gh188apbax1/VMware-player-12.5.2-4638234.exe?dl=0
- Download the MD380tools.zip from here: https://www.dropbox.com/s/agve8z306c7kabq/md380tools.zip?dl=0
- Unzip and copy the whole directory MD380tools
-folder to your hard drive or on a flash drive.
+
+Download and install VMware player from here: https://www.dropbox.com/s/6v47gh188apbax1/VMware-player-12.5.2-4638234.exe?dl=0
+
+Download the MD380tools.zip from here: https://www.dropbox.com/s/agve8z306c7kabq/md380tools.zip?dl=0
+
+ Unzip and copy the whole directory MD380tools folder to your hard drive or on a flash drive.
  Launch VMware Player
  First time chose – “Open a virtual machine”
- Navigate to MD380tools folder and chose file
-md380tools.vmx
+ Navigate to MD380tools folder and chose file md380tools.vmx
  Press the play button or double click md380tools
- DOS like window will pop up. Ignore all messages
-and let the virtual machine run until you get the log
-in screen
-18-December-2016
+ DOS like window will pop up. Ignore all messages and let the virtual machine run until you get the log in screen
  Point the mouse to the DOS like window and click the left button to get it into focus
 You will get a debian login: message  enter: root
 Password  enter: md380tools
+
 First time operation you will be required to enter your name and call sign.
+
 Then you will get the following menu:
 For first time activation and to make sure the software is up to date, do the following:
 1. Press 1 to update source files
