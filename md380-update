@@ -1,0 +1,622 @@
+#!/bin/bash
+
+read -d . VERSION < /etc/debian_version
+		if [ "$VERSION" == "7" ]; then
+		fullname="/root/.fullname"
+		callsign="/root/.callsign"
+		LOGFILE="/root/.md380.log"
+			echo ""
+			echo "OK.  OS is DEBIAN WHEEZY."
+			echo ""
+			echo "DEBIAN JESSIE IS REQUIRED TO RUN THIS PROGRAM.  PLEASE UPGRADE YOUR OS BEFORE USING THIS PROGRAM."
+			echo ""
+			echo "PROGRAM WILL NOW EXIT!"
+			echo ""
+			now=$(date "+%Y-%d-%m %H:%M:%S")
+			echo "$(cat /root/.fullname) $(cat /root/.callsign) ***  ERROR *** DEBIAN WHEEZY DETECTED at $now " >> $LOGFILE
+			sleep 2
+			now1=$(date "+%Y-%d-%m %H:%M:%S")
+			echo "$(cat /root/.fullname) $(cat /root/.callsign) logged out at $now1 " >> $LOGFILE
+			sleep 20
+			exit
+		elif [ "$VERSION" == "8" ]; then
+			echo ""
+			echo "OK.  OS is DEBIAN JESSIE."
+			echo ""
+			sleep 1
+		fi
+
+trap ctrl_c INT
+clear
+function ctrl_c() {
+        echo ""
+        echo "** Sorry CTRL-C not permitted.  Please exit with option 99."
+        echo ""
+}
+ 
+##################################################################################
+##################################################################################
+###### PLEASE DO NOT COPY, MODIFY OR ALTER THIS PROGRAM                      #####
+###### This program is copywritten by Gescio Oteco Alpuro - WH6AV ©2016      #####
+###### Questions, bugs or to request additional features can be directed     #####
+###### to my email address wh6av@allpuremedia.com                            #####
+######                              vM1.1                                    #####
+##################################################################################
+##################################################################################
+
+wd=$(pwd)
+uid=$(id -u)
+fullname="/root/.fullname"
+callsign="/root/.callsign"
+timestamp1=`date --rfc-3339=seconds`
+LOGFILE="/root/.md380.log"
+
+dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
+
+if [ "$dist" == "Ubuntu" ]; then
+	echo ""
+	echo "OK.  OS is UBUNTU."
+	echo ""
+	sleep 2
+elif [ "$dist" == "Debian" ]; then
+	echo ""
+	echo ""
+	echo "OK.  OS is DEBIAN JESSIE."
+	echo ""
+	sleep 2
+elif [ "$dist" == "Raspbian" ]; then
+	echo ""
+	echo "OK.  OS is RASPBIAN."
+	echo ""
+	sleep 2
+elif [ "$dist" == "Arch" ]; then
+	echo ""
+	echo "OK.  OS is ARCH LINUX."
+	echo ""
+	sleep 2
+else
+	echo ""
+fi	
+echo ""
+echo "PLEASE DO NOT COPY, MODIFY OR ALTER THIS PROGRAM"
+echo "This program is copywritten by Gescio Oteco Alpuro - WH6AV ©2016"
+echo "Questions, bugs or to request additional features can be directed"
+echo "to my email address wh6av@allpuremedia.com"
+echo "                             vM1.1"
+
+[ $uid -ne 0 ] && { echo "YOU MUST BE ROOT TO RUN THIS SCRIPT"; exit 1; }
+
+							
+if [ -f $fullname ]; then
+	echo "Welcome "
+	echo $(cat /root/.fullname) $(cat /root/.callsign)
+	echo "$(cat /root/.fullname) $(cat /root/.callsign) logged in at $timestamp1" >> $LOGFILE
+	sleep 5
+	clear
+else
+	echo ""
+	echo ""	
+	echo -n "Please enter your FULL NAME and press [ENTER]: "
+	read name; echo $name > $fullname
+	echo ""	
+	echo -n "Please enter your CALLSIGN and press [ENTER]: "
+	read callsign1; echo $callsign1 > $callsign
+	echo ""
+	clear
+	echo "$(cat /root/.fullname) $(cat /root/.callsign) logged in at $timestamp1" >> $LOGFILE
+fi
+
+while true
+do
+clear
+echo ""
+echo "PLEASE DO NOT COPY, MODIFY OR ALTER THIS PROGRAM"
+echo "This program is copywritten by Gescio Oteco Alpuro - WH6AV ©2016"
+echo "Questions, bugs or to request additional features can be directed"
+echo "to my email address wh6av@allpuremedia.com"
+echo "                             vM1.1"
+
+echo ""
+echo "1)   Update source files for operating system"
+echo "2)   Update applications for operating system"
+echo "3)   Install Prerequisite programs for MD380TOOLS"
+echo "4)   Install or update MD380TOOLS"
+echo "5)   Flash new hacked firmware for MD380 or MD390 radio (NON-GPS RADIOS)"
+echo "6)   Flash new hacked firmware for MD380 or MD390 radio (GPS RADIOS)"
+echo "7)   Flash DMR User Database to MD380 or MD390 radio"
+echo "8)   Make a backup of raw (headless) codeplug from MD380 or MD390 radio"
+echo "9)   Restore a backup of raw (headless) codeplug to MD380 or MD390 radio"
+echo ""
+echo "99)  EXIT PROGRAM"
+echo ""
+
+echo -n "Please enter your choice.  " 
+read choice
+echo
+
+case $choice in
+	1) echo ""
+
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+			echo ""
+			echo "If you have updated less than a week ago, respond with N"
+			echo ""
+		read -p 'Proceed with operating system source files update ?  Y or N  ' aptvar1
+			case $aptvar1 in
+			[yY]* ) echo ""
+				echo "Okay.  We will proceed to do update source files for operating system."
+					file1="/usr/bin/apt-get"
+					file2="/usr/bin/pacman"
+					if [ -f $file1 ]; then
+						sudo apt-get update -y
+					elif [ -f $file2 ]; then
+						sudo pacman -Sy
+					fi
+				echo ""
+				echo "Alright, operating source files update completed."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) OPERATING SYSTEM SOURCE FILES UPDATE executed at $timestamp1 " >> $LOGFILE
+				break;;
+			[nN]* ) echo ""
+				break;;
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+
+	;;
+	2) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+			echo ""
+			echo ""
+		read -p 'Proceed with installed operating system applications update ?  Y or N  ' aptvar2
+			case $aptvar2 in
+			[yY]* ) echo ""
+				echo "Okay.  We will proceed to update operating systems applications."
+					file1="/usr/bin/apt-get"
+					file2="/usr/bin/pacman"
+					if [ -f $file1 ]; then
+						sudo apt-get upgrade -y
+					elif [ -f $file2 ]; then
+						sudo pacman -Su
+					fi
+				echo ""
+				echo "Alright, operating systems applications update completed."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) OPERATING SYSTEM APPLICATIONS UPDATE executed at $timestamp1 " >> $LOGFILE
+				break;;
+			[nN]* ) echo ""
+				echo "Moving on to next step."
+				echo ""
+				break;;
+	
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+
+	;;
+	3) 	echo ""
+
+		while true
+		do
+		timestamp1=`date --rfc-3339=seconds`
+		clear
+			echo ""
+			echo ""
+			echo ""
+		read -p 'Is this an initial install of MD380TOOLS? Y or N  ' installvar
+			case $installvar in
+			[yY]* ) echo ""
+					file1="/usr/bin/apt-get"
+					file2="/usr/bin/pacman"
+					if [ -f $file1 ]; then
+						echo "Okay.  We will proceed to install the required files to run MD380TOOLS."
+						echo ""
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) PREREQUISITE FILES INSTALLATION executed at $timestamp1 " >> $LOGFILE
+						sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi libusb-1.0 python-usb -y
+						sudo apt-get install screen -y
+						sudo apt-get install git -y
+						sudo apt-get install python-pip -y
+						sudo pip install pyusb -U
+						sudo git clone https://github.com/walac/pyusb
+						cd pyusb
+						sudo python setup.py install
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) PREREQUISITE FILES INSTALLATION completed at $timestamp1 " >> $LOGFILE
+					elif [ -f $file2 ]; then
+						echo ""
+						echo "Sorry.  At this time source files are not available for Arch Linux.  Please use Debian os Raspbian."
+						echo ""
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) PREREQUISITE FILES INSTALLATION was unsuccessful due to ARCH LINUX at $timestamp1 " >> $LOGFILE
+					fi
+	
+				break;;
+
+			[nN]* ) echo ""
+				echo ""
+				echo ""
+				echo "Okay.  Back to Main Menu."
+				echo ""
+				echo ""
+				echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	
+	;;
+	4) echo ""
+	clear
+	wd=$(pwd)
+	timestamp1=`date --rfc-3339=seconds`
+	echo ""
+	echo ""
+	echo "Curent work directory is $wd"
+	echo ""
+	if [ -d "$wd/../md380tools" ]; then
+		echo ""
+		echo "md380tools exist"
+		echo ""
+		while true
+		do
+		read -p 'Would you like to update md380tools?  Y or N  ' updatemd380toolsvar
+		case $updatemd380toolsvar in
+			[yY]* ) echo ""
+				echo "Okay.  We will proceed to update MD380TOOLS."
+				echo ""
+				cd $wd/../md380tools
+				sudo git pull
+					if [ "$dist" == "Ubuntu" ]; then
+						echo ""
+						echo "OK.  Building for Ubuntu."
+						echo ""
+						sleep 5
+						sudo make distclean
+						sudo make all
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS UPDATED executed at $timestamp1 " >> $LOGFILE
+					elif [ "$dist" == "Raspbian" ]; then
+						echo ""
+						echo "OK.  Building for Raspbian."
+						echo ""
+						sleep 5
+						sudo make distclean
+						sudo make all
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS UPDATED executed at $timestamp1 " >> $LOGFILE
+					elif [ "$dist" == "Arch" ]; then
+						echo ""
+						echo "Sorry ARCH LINUX is currently not supported.  Please use Raspbian or Debian."
+						echo ""
+						sleep 10
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS UPDATED failed due to ARCH LINUX OS at $timestamp1 " >> $LOGFILE
+					else
+						sudo make distclean
+						sudo make all
+					fi	
+						sleep 5	
+						echo ""
+						echo "Okay MD380TOOLS has been updated."
+						echo ""
+						break;;
+			[nN]* ) echo ""
+				break;;
+			* ) 	echo "Please enter Y or N.";;
+		esac
+		done
+	else
+		cd $wd/..
+		sudo git clone https://github.com/travisgoodspeed/md380tools
+		cd md380tools
+			if [ "$dist" == "Ubuntu" ]; then
+				echo ""
+				echo "OK.  Building for Ubuntu."
+				echo ""
+				sleep 5
+				sudo make clean
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS INSTALL executed at $timestamp1 " >> $LOGFILE
+			elif [ "$dist" == "Raspbian" ]; then
+				echo ""
+				echo "OK.  Building for Raspbian."
+				echo ""
+				sleep 5
+				sudo make dist clean
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS INSTALL executed at $timestamp1 " >> $LOGFILE
+			else
+				sudo make clean
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS INSTALL executed at $timestamp1 " >> $LOGFILE
+			fi	
+					
+		make all
+		echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS INSTALLED at $timestamp1 " >> $LOGFILE
+		sleep 5
+	fi
+	;;
+	5) echo ""
+
+		while true
+		do
+		clear
+		wd=$(pwd)
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to flash the firmware for your MD380 or MD390? Y or N  ' flashfwvar
+			case $flashfwvar in
+			[yY]* ) echo ""
+				echo ""
+				echo "Please ensure USB cable is connected to your RPi and Radio"
+				echo ""
+				echo "Please turn radio off."
+				echo "Put your Radio in DFU-MODE"
+				echo "Hold PTT and button above at the same time and turn radio on."
+				echo "Waiting 20 seconds, after which flashing of your radio will start."
+				echo ""
+
+					while true
+					do
+					read -p 'Are you in DFU mode?  Y or N  ' dfumodevar
+						case $dfumodevar in
+						[yY]* ) echo ""
+							echo "Proceeding to update radio firmware."
+							cd $wd/../md380tools
+							sudo make clean
+							sudo make flash
+							echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS FIRMWARE INSTALLATION executed at $timestamp1 " >> $LOGFILE
+							sleep 10
+							break;;
+						[nN]* ) echo ""
+							echo ""
+							break;;
+						* ) 
+					esac
+					done
+				
+				break;;
+
+			[nN]* ) echo ""
+				echo ""
+				echo ""
+				echo "Okay"
+				echo ""
+				echo ""
+				echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	6) echo ""
+
+		while true
+		do
+		clear
+		wd=$(pwd)
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to flash the firmware for your MD380G or MD390G? Y or N  ' flashfwvar
+			case $flashfwvar in
+			[yY]* ) echo ""
+				echo ""
+				echo "Please ensure USB cable is connected to your RPi and Radio"
+				echo ""
+				echo "Please turn radio off."
+				echo "Put your Radio in DFU-MODE"
+				echo "Hold PTT and button above at the same time and turn radio on."
+				echo "Waiting 20 seconds, after which flashing of your radio will start."
+				echo ""
+
+					while true
+					do
+					read -p 'Are you in DFU mode?  Y or N  ' dfumodevar
+						case $dfumodevar in
+						[yY]* ) echo ""
+							echo "Proceeding to update radio firmware."
+							cd $wd/../md380tools
+							sudo make clean
+							sudo make flash_S13
+							echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380TOOLS GPS FIRMWARE INSTALLATION executed at $timestamp1 " >> $LOGFILE
+							sleep 10
+							break;;
+						[nN]* ) echo ""
+							echo ""
+							break;;
+						* ) 
+					esac
+					done
+				
+				break;;
+
+			[nN]* ) echo ""
+				echo ""
+				echo ""
+				echo "Okay"
+				echo ""
+				echo ""
+				echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;	
+	7) echo ""
+	
+		while true
+		do
+		clear
+		wd=$(pwd)
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to flash the DMR USER DATABASE for your MD380 or MD390? Y or N  ' flashdbvar
+			case $flashdbvar in
+			[yY]* ) echo ""
+				echo ""
+				echo "Please ensure USB cable is connected to your RPi and Radio"
+				echo ""
+				echo "Please turn radio on as you normally do."
+				echo "Radio should not be in DFU-MODE!!!"
+				echo ""
+				echo "Waiting 20 seconds"
+				echo ""
+				sleep 20
+				cd $wd/../md380tools/db
+				echo $wd
+				sudo make clean
+				sudo make all
+				cd $wd/../md380tools
+				sudo make flashdb
+				echo $wd
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) DMR ID USER DATABASE executed at $timestamp1 " >> $LOGFILE
+				echo "Once radio is turned on, make sure USERSCSV is enabled."
+				echo "Select MENU, goto UTILITIES, goto MD380TOOLS, select ENABLE and exit out to main screen."
+				echo ""
+				echo ""
+				echo "Enjoy!"
+				echo "73 and Aloha!"
+				echo ""
+				echo "Gescio Alpuro - WH6AV"
+		
+				break;;
+	
+			[nN]* ) echo ""
+				echo ""
+				echo ""
+				echo "73 and Aloha!"
+				echo "Gescio Alpuro - WH6AV"
+				echo ""
+				echo ""
+				echo ""
+				break;;
+	
+			* )	echo "Please enter Y or N";;
+			esac
+		done	
+	;;
+	8) echo ""
+	
+		while true
+		do
+		clear
+                cd /root
+		wd=$(pwd)
+                echo $wd
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to create a raw backup codeplug for your MD380 or MD390? Y or N  ' rawbackupvar
+			case $rawbackupvar in
+			[yY]* ) echo ""
+				echo "Please turn radio on."
+				echo "Put your Radio in NORMAL-MODE"
+				echo ""
+				echo "Please ensure USB cable is connected to your RPi and Radio"
+				echo ""
+				echo "Radio should be in NORMAL-MODE!"
+				echo ""
+                                echo "Waiting 20 seconds"
+                                echo ""
+				sleep 20
+					read -p 'Please type in a name for your backup codeplug.  Must not contain any special characters  ' fname1var
+						echo "Please wait while I backup your current codeplug of your MD380 or MD390 radio."
+						cd $wd/md380tools
+							if [ -d $wd/codeplugs ]; then
+								sudo ./md380-dfu read $wd/codeplugs/$fname1var.img
+								echo "An image of your codeplug was saved to $wd/../codeplugs/$fname1var.img."
+								echo ""
+								echo "Codeplug (RAW HEADLESS) was successfully backed up from your radio and saved."
+								echo "$(cat /root/.fullname) $(cat /root/.callsign) CODEPLUG BACKUP successfully executed at $timestamp1 " >> $LOGFILE
+								sleep 10
+							else
+								mkdir $wd/codeplugs
+								sudo ./md380-dfu read $wd/codeplugs/$fname1var.img
+								echo "An image of your codeplug was saved to $wd/../codeplugs/$fname1var.img."
+								echo ""
+								echo "Codeplug (RAW HEADLESS) was successfully backed up from your radio and saved."
+								echo "$(cat /root/.fullname) $(cat /root/.callsign) CODEPLUG BACKUP successfully executed at $timestamp1 " >> $LOGFILE
+								sleep 10
+							fi
+		
+				break;;
+	
+			[nN]* ) echo ""
+				echo ""
+				echo ""
+				echo ""
+				echo ""
+				break;;
+	
+			* )	echo "Please enter Y or N";;
+			esac
+		done	
+	;;
+	9) echo ""
+		while true
+		do
+		clear
+                cd /root
+		wd=$(pwd)
+                echo $wd
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to restore a raw backup codeplug to your MD380 or MD390? Y or N  ' rawrestorevar
+			echo ""
+			echo "YOU MUST CREATE A BACKUP OF YOUR RADIO FIRST TO USE THIS RESTORE!!!"
+			echo ""
+			echo "IF YOU HAVE ALREADY CREATED A BACKUP, YOU MAY PROCEED."
+			echo ""
+			case $rawrestorevar in
+			[yY]* ) echo ""
+				echo "Please turn radio on."
+				echo "Put your Radio in NORMAL-MODE"
+				echo ""
+				echo "Please ensure USB cable is connected to your RPi and Radio"
+				echo ""
+				echo "Radio should be in NORMAL-MODE!"
+				echo ""
+				echo "Waiting 20 seconds"
+				echo ""
+				sleep 20
+					echo "Codeplugs found."
+					files=$( ls $wd/codeplugs/*.img) 
+					counter=0
+					for i in $files ; do
+						let counter=$counter+1
+						echo $counter $i
+					done
+				echo ""
+					read -p 'Please type in the name for your restore codeplug. Do not include .img.  ' fname3var
+						echo "Please wait while I restore your backup codeplug to your radio."
+						cd $wd/md380tools  
+						echo ""
+						sudo ./md380-dfu write $wd/codeplugs/$fname3var.img ##
+						echo ""
+						echo "Your backup codeplug $fname3var.img was successfully restored to your radio."
+						echo ""
+						echo "Please turn your radio off then power back on."
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) CODEPLUG RESTORE successfully executed at $timestamp1 " >> $LOGFILE
+						sleep 10
+				break;;
+	
+			[nN]* ) echo ""
+				echo ""
+				echo ""
+				echo ""
+				echo ""
+				break;;
+	
+			* )	echo "Please enter Y or N";;
+			esac
+		done	
+	;;
+	99) echo ""
+		echo ""
+		echo "73 and Aloha!"
+		echo "Gescio Alpuro - WH6AV"
+		echo ""
+		echo ""
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		echo "$(cat /root/.fullname) $(cat /root/.callsign) logged out at $timestamp1 " >> $LOGFILE
+		exit;;
+
+	* )	echo "Please enter letter of coice";;
+	esac
+done
