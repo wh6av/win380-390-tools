@@ -40,7 +40,7 @@ function ctrl_c() {
 ###### This program is copywritten by Gescio Oteco Alpuro - WH6AV ©2016      #####
 ###### Questions, bugs or to request additional features can be directed     #####
 ###### to my email address wh6av@allpuremedia.com                            #####
-######                              vM5.1                                    #####
+######                              v12                                      #####
 ##################################################################################
 ##################################################################################
 
@@ -82,7 +82,7 @@ echo "PLEASE DO NOT COPY, MODIFY OR ALTER THIS PROGRAM"
 echo "This program is copywritten by Gescio Oteco Alpuro - WH6AV ©2016"
 echo "Questions, bugs or to request additional features can be directed"
 echo "to my email address wh6av@allpuremedia.com"
-echo "                             vM5.1"
+echo "                             v12"
 
 [ $uid -ne 0 ] && { echo "YOU MUST BE ROOT TO RUN THIS SCRIPT"; exit 1; }
 
@@ -114,20 +114,40 @@ echo "PLEASE DO NOT COPY, MODIFY OR ALTER THIS PROGRAM"
 echo "This program is copywritten by Gescio Oteco Alpuro - WH6AV ©2016"
 echo "Questions, bugs or to request additional features can be directed"
 echo "to my email address wh6av@allpuremedia.com"
-echo "                             vM5.1"
+echo "                             v12"
 
 echo ""
 echo "1)   Update source files for operating system"
 echo "2)   Update applications for operating system"
 echo "3)   Install Prerequisite programs for MD380TOOLS"
 echo "4)   Install or update MD380TOOLS"
+echo "41)  RESTORE RADIO TO ORIGINAL FIRMWARE"
 echo "5)   Flash new hacked firmware for MD380 or MD390 radio (NON-GPS RADIOS)"
 echo "6)   Flash new hacked firmware for MD380 or MD390 radio (GPS RADIOS)"
-echo "7)   Flash NORMAL DMR User Database to MD380 or MD390 radio (NON-EUROPEAN)"
-echo "71)   Flash EUROPEAN DMR User Database to MD380 or MD390 radio (EUROPEAN)"
-echo "72)   Flash WORLDWIDE DMR User Database to MD380 or MD390 radio (WORLDWIDE)"
+echo "7)   Flash DMR User Database to MD380 or MD390 radio (NON EUROPEAN)"
+echo "71)  Flash DMR User Database to MD380 or MD390 radio (EUROPEAN)"
+echo "72)  Flash DMR User Database to MD380 or MD390 radio (ALL COUNTRIES)"
 echo "8)   Make a backup of raw (headless) codeplug from MD380 or MD390 radio"
 echo "9)   Restore a backup of raw (headless) codeplug to MD380 or MD390 radio"
+echo "10)  Upload PREDEFINED CODEPLUG for MD380 or MD390 radio"
+echo "11)  Install MMDVMHost"
+echo "12)  Install service related programs for MMDVMHost"
+echo "     **********************************************************************"
+echo "          USE OPTION 10 ONLY IF MMDVMHOST IS IN THE FOLLOWING LOCATION:"      
+echo "                         /home/mmdvm/Downloads/MMDVMHost              "      
+echo "     **********************************************************************"
+echo "13)  RESTART MMDVMHost"
+echo "14)  STOP MMDVMHost"
+echo "15)  START MMDVMHost"
+echo "16)  Install MMDVMHost-Dashboard"
+echo "17)  Install BRANDMEISTER-Dashboard"
+echo "18)  Install WEB SERVICES"
+echo "19)  Change root password"
+echo "20)  REBOOT RASPBERRY PI"
+echo "21)  SHUTDOWN RASPBERRY PI"
+echo "22)  Enable md380-update autostart on login"
+echo "23)  Install DV4MF2 Control Panel for DV4MINI"
+echo "     *******  DV4MINI INCLUDED  ******"
 echo ""
 echo "99)  EXIT PROGRAM"
 echo ""
@@ -337,6 +357,65 @@ case $choice in
 		sleep 5
 	fi
 	;;
+	41) echo ""
+		while true
+		do
+		clear
+		wd=$(pwd)
+		timestamp1=`date --rfc-3339=seconds`
+				echo "1.  Restore MD-380/MD-390 to original D02 firmware (NONGPS)"
+				echo "2.  Restore MD-380/MD-390 to original D03 firmware (NONGPS)"
+				echo "3.  Restore MD-380/MD-390 to original S13 firmware (GPS)"
+				echo "X.  Exit to main menu"
+				read -p 'Please select which option you would like to perform.  ' fwvar
+					case $fwvar in
+					[1]* ) echo ""
+						echo "Please ensure USB cable is connected to your RPi and Radio"
+						echo ""
+						echo "Please turn radio off."
+						echo "Put your Radio in DFU-MODE"
+						echo "Hold PTT and button above at the same time and turn radio on."
+						echo "Waiting 15 seconds, after which red and green flashing led of your radio will start."
+						echo ""
+						sleep 15
+						cd $wd/../md380tools/
+						sudo make clean
+						sudo make flash_original_D02
+						sleep 15
+						break;;
+					[2]* ) echo ""
+						echo "Please ensure USB cable is connected to your RPi and Radio"
+						echo ""
+						echo "Please turn radio off."
+						echo "Put your Radio in DFU-MODE"
+						echo "Hold PTT and button above at the same time and turn radio on."
+						echo "Waiting 15 seconds, after which red and green flashing led of your radio will start."
+						echo ""
+						sleep 15
+						cd $wd/../md380tools/
+						sudo make clean
+						sudo make flash_original_D03
+						sleep 15
+						break;;
+					[3]* ) echo ""
+						echo "Please ensure USB cable is connected to your RPi and Radio"
+						echo ""
+						echo "Please turn radio off."
+						echo "Put your Radio in DFU-MODE"
+						echo "Hold PTT and button above at the same time and turn radio on."
+						echo "Waiting 15 seconds, after which red and green flashing led of your radio will start."
+						echo ""
+						sleep 15
+						cd $wd/../md380tools/
+						sudo make clean
+						sudo make flash_S13
+						sleep 15
+						break;;
+					[Xx]* ) break;;
+					* )	echo "Please enter 1, 2, 3 or x";;
+			esac
+		done
+	;;
 	5) echo ""
 
 		while true
@@ -460,10 +539,8 @@ case $choice in
 				echo "Waiting 10 seconds"
 				echo ""
 				sleep 10
-				cd $wd/../md380tools/db
-				echo $wd
 				cd $wd/../md380tools
-				sudo make flashdb
+				sudo make updatedb flashdb
 				echo $wd
 				echo "$(cat /root/.fullname) $(cat /root/.callsign) DMR ID USER DATABASE executed at $timestamp1 " >> $LOGFILE
 				echo "Once radio is turned on, make sure USERSCSV is enabled."
@@ -498,7 +575,7 @@ case $choice in
 		clear
 		wd=$(pwd)
 		timestamp1=`date --rfc-3339=seconds`
-		read -p 'Would you like to flash the DMR USER DATABASE for your MD380 or MD390? Y or N  ' flashdbvar
+		read -p 'Would you like to flash the EUROPEAN DMR USER DATABASE for your MD380 or MD390? Y or N  ' flashdbvar
 			case $flashdbvar in
 			[yY]* ) echo ""
 				echo ""
@@ -510,12 +587,10 @@ case $choice in
 				echo "Waiting 10 seconds"
 				echo ""
 				sleep 10
-				cd $wd/../md380tools/db
-				echo $wd
 				cd $wd/../md380tools
-				sudo make udatedb_eur flashdb
+				sudo make updatedb_eur flashdb
 				echo $wd
-				echo "$(cat /root/.fullname) $(cat /root/.callsign) DMR ID USER DATABASE executed at $timestamp1 " >> $LOGFILE
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) EUROPEAN DMR ID USER DATABASE executed at $timestamp1 " >> $LOGFILE
 				echo "Once radio is turned on, make sure USERSCSV is enabled."
 				echo "Select MENU, goto UTILITIES, goto MD380TOOLS, select ENABLE and exit out to main screen."
 				echo ""
@@ -539,8 +614,8 @@ case $choice in
 	
 			* )	echo "Please enter Y or N";;
 			esac
-		done	
-	;;
+		done
+	;;	
 	72) echo ""
 	
 		while true
@@ -548,7 +623,7 @@ case $choice in
 		clear
 		wd=$(pwd)
 		timestamp1=`date --rfc-3339=seconds`
-		read -p 'Would you like to flash the DMR USER DATABASE for your MD380 or MD390? Y or N  ' flashdbvar
+		read -p 'Would you like to flash the WORLDWIDE DMR USER DATABASE for your MD380 or MD390? Y or N  ' flashdbvar
 			case $flashdbvar in
 			[yY]* ) echo ""
 				echo ""
@@ -560,18 +635,21 @@ case $choice in
 				echo "Waiting 10 seconds"
 				echo ""
 				sleep 10
-				cd $wd/../md380tools/db
+				cd $wd/../md380tools/db/
 				sudo rm current-users.csv*
 				sudo wget "http://42561.noip.us/current-users.csv"
-				sudo sed -e 's///g' current-users.csv >> new-current-users.csv
+				sudo sed -e 's/
+//g' current-users.csv >> new-current-users.csv
 				sudo rm current-users.csv
 				sudo mv new-current-users.csv current-users.csv
-				cd $wd/../md380tools
-				sudo wc -c < db/current-users.csv > user.bin
-				sudo cat db/current-users.csv > user.bin
+				cd $wd/../md380tools/
+				sudo wc -c < db/current-users.csv > newuser.bin
+				sudo cat db/current-users.csv >> newuser.bin
+				sed -e 's/
+//g' newuser.bin > user.bin
 				sudo ./md380-tool spiflashwrite user.bin 0x100000
 				echo $wd
-				echo "$(cat /root/.fullname) $(cat /root/.callsign) ENTIRE DMR ID USER DATABASE executed at $timestamp1 " >> $LOGFILE
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) WORLDWIDE DMR ID USER DATABASE executed at $timestamp1 " >> $LOGFILE
 				echo "Once radio is turned on, make sure USERSCSV is enabled."
 				echo "Select MENU, goto UTILITIES, goto MD380TOOLS, select ENABLE and exit out to main screen."
 				echo ""
@@ -580,7 +658,7 @@ case $choice in
 				echo "73 and Aloha!"
 				echo ""
 				echo "Gescio Alpuro - WH6AV"
-				sleep 10
+				sleep 15
 		
 				break;;
 	
@@ -596,16 +674,14 @@ case $choice in
 	
 			* )	echo "Please enter Y or N";;
 			esac
-		done	
+		done
 	;;
 	8) echo ""
 	
 		while true
 		do
 		clear
-                cd /root
 		wd=$(pwd)
-                echo $wd
 		timestamp1=`date --rfc-3339=seconds`
 		read -p 'Would you like to create a raw backup codeplug for your MD380 or MD390? Y or N  ' rawbackupvar
 			case $rawbackupvar in
@@ -617,22 +693,20 @@ case $choice in
 				echo ""
 				echo "Radio should be in NORMAL-MODE!"
 				echo ""
-                                echo "Waiting 20 seconds"
-                                echo ""
 				sleep 20
 					read -p 'Please type in a name for your backup codeplug.  Must not contain any special characters  ' fname1var
 						echo "Please wait while I backup your current codeplug of your MD380 or MD390 radio."
-						cd $wd/md380tools
-							if [ -d $wd/codeplugs ]; then
-								sudo ./md380-dfu read $wd/codeplugs/$fname1var.img
+						cd $wd/../md380tools
+							if [ -d $wd/../codeplugs ]; then
+								sudo ./md380-dfu read $wd/../codeplugs/$fname1var.img
 								echo "An image of your codeplug was saved to $wd/../codeplugs/$fname1var.img."
 								echo ""
 								echo "Codeplug (RAW HEADLESS) was successfully backed up from your radio and saved."
 								echo "$(cat /root/.fullname) $(cat /root/.callsign) CODEPLUG BACKUP successfully executed at $timestamp1 " >> $LOGFILE
 								sleep 10
 							else
-								mkdir $wd/codeplugs
-								sudo ./md380-dfu read $wd/codeplugs/$fname1var.img
+								mkdir $wd/../codeplugs
+								sudo ./md380-dfu read $wd/../codeplugs/$fname1var.img
 								echo "An image of your codeplug was saved to $wd/../codeplugs/$fname1var.img."
 								echo ""
 								echo "Codeplug (RAW HEADLESS) was successfully backed up from your radio and saved."
@@ -657,9 +731,7 @@ case $choice in
 		while true
 		do
 		clear
-                cd /root
 		wd=$(pwd)
-                echo $wd
 		timestamp1=`date --rfc-3339=seconds`
 		read -p 'Would you like to restore a raw backup codeplug to your MD380 or MD390? Y or N  ' rawrestorevar
 			echo ""
@@ -680,7 +752,7 @@ case $choice in
 				echo ""
 				sleep 20
 					echo "Codeplugs found."
-					files=$( ls $wd/codeplugs/*.img) 
+					files=$( ls $wd/../codeplugs/*.img)
 					counter=0
 					for i in $files ; do
 						let counter=$counter+1
@@ -689,9 +761,9 @@ case $choice in
 				echo ""
 					read -p 'Please type in the name for your restore codeplug. Do not include .img.  ' fname3var
 						echo "Please wait while I restore your backup codeplug to your radio."
-						cd $wd/md380tools  
+						cd $wd/../md380tools
 						echo ""
-						sudo ./md380-dfu write $wd/codeplugs/$fname3var.img ##
+						sudo ./md380-dfu write $wd/../codeplugs/$fname3var.img
 						echo ""
 						echo "Your backup codeplug $fname3var.img was successfully restored to your radio."
 						echo ""
@@ -710,6 +782,559 @@ case $choice in
 			* )	echo "Please enter Y or N";;
 			esac
 		done	
+	;;
+	10) echo ""
+		while true
+		do
+		clear
+		wd=$(pwd)
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to upload a DEFAULT CODEPLUG to your MD380 or MD390? Y or N  ' defaultcpvar
+			echo ""
+			echo "YOU WILL BE PROMPTED TO CREATE A BACKUP OF YOUR RADIO FIRST TO USE THIS DEFAULT CODEPLUG!!!"
+			echo ""
+			case $defaultcpvar in
+			[yY]* ) echo ""
+				echo "Please turn radio on."
+				echo "Put your Radio in NORMAL-MODE"
+				echo ""
+				echo "Please ensure USB cable is connected to your RPi and Radio"
+				echo ""
+				echo "Radio should be in NORMAL-MODE!"
+				echo ""
+				echo "Waiting 20 seconds"
+				echo ""
+				sleep 20
+				cd $wd/../md380tools/
+				echo ""
+					read -p 'Please type in a name for your backup codeplug.  Must be 8 characters or less and no special characters  ' fnamevar
+						echo "Please wait while I backup your current codeplug of your MD380 or MD390 radio."
+						sudo ./md380-dfu read $fnamevar.img
+						echo "An image of your codeplug was saved to $fnamevar.img."
+						sleep 10
+						sudo ./md380-dfu write $wd/../md380-radio/default-codeplug.img
+						sleep 10
+				echo ""
+				echo "Default codeplug (RAW HEADLESS) was uplodaed to your radio!"
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) DEFAULT CODEPLUG INSTALLATION executed at $timestamp1 " >> $LOGFILE
+				echo ""
+				sleep 5
+				break;;
+	
+			[nN]* ) echo ""
+				echo ""
+				echo ""
+				echo ""
+				echo ""
+				break;;
+	
+			* )	echo "Please enter Y or N";;
+			esac
+		done	
+	;;
+	11) echo ""
+		while true
+		do
+		clear
+		wd=$(pwd)
+		timestamp1=`date --rfc-3339=seconds`
+			echo ""
+		read -p 'Would you like to install MMDVMHost?  Y or N  ' mmdvmhostvar
+			case $mmdvmhostvar in
+			[yY]* ) echo ""
+				echo "Okay.  We will proceed to install MMDVMHost."
+				echo ""
+				echo "Your current directory is $wd."
+				echo ""
+				sleep 5
+				if [ "$wd" == "/home/mmdvm/md380-radio" ]; then
+					cd ../Downloads
+						if [ -d "MMDVMHost" ]; then
+							echo "MMDVMHost is already installed"
+							sleep 5
+						else
+							sudo git clone https://github.com/g4klx/MMDVMHost
+							cd MMDVMHost
+							sudo make
+							echo "MMDVMHost Installation completed"
+							sleep 5
+						fi
+				elif [ "$wd" == "/home/pi/md380-radio" ]; then
+					cd ../Downloads
+						if [ -d "MMDVMHost" ]; then
+							echo "MMDVMHost is already installed"
+							sleep 5
+						else
+							sudo git clone https://github.com/g4klx/MMDVMHost
+							cd MMDVMHost
+							sudo make
+							echo "MMDVMHost Installation completed"
+							sleep 5
+						fi
+				else
+					cd ../Downloads
+						if [ -d "MMDVMHost" ]; then
+							echo "MMDVMHost is already installed"
+							sleep 5
+						else
+							sudo git clone https://github.com/g4klx/MMDVMHost
+							cd MMDVMHost
+							sudo make
+							echo "MMDVMHost Installation completed"
+							sleep 5
+						fi
+
+				fi
+				sleep 5
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MMDVMHOST INSTALL executed at $timestamp1 " >> $LOGFILE
+				break;;
+			[nN]* ) echo ""
+				break;;
+			* ) 	echo "Please enter Y or N.";;
+			esac
+		done
+
+	;;
+	12) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Are you sure you want to add MMDVMHost service and timer related files and enable them?  Y or N  '  srvtimevar
+		case $srvtimevar in
+			[yY]* ) echo ""
+
+				cd /lib/systemd/system/
+				sudo wget http://66.75.80.170/mmdvmhost.service
+				sudo wget http://66.75.80.170/mmdvmhost.timer
+				sudo ln -s /lib/systemd/system/mmdvmhost.service /etc/systemd/system/mmdvmhost.service
+				sudo ln -s /lib/systemd/system/mmdvmhost.timer /etc/systemd/system/mmdvmhost.timer
+				sudo systemctl daemon-reload
+				sudo systemctl enable mmdvmhost.service
+				sudo systemctl enable mmdvmhost.timer
+				echo ""
+				echo "Files mmdvmhost.service and mmdvmhost.timer has been added and enabled."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MMDVMHOST SERVICE INSTALL executed at $timestamp1 " >> $LOGFILE
+				break;;
+			[nN]* ) echo ""
+				break;;
+			* ) 	echo "Please enter Y or N.";;
+			esac
+		done
+
+	;;
+	13) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Are you sure you want to restart MMDVMHost service?  Y or N  '  restartmmdvmvar
+		case $restartmmdvmvar in
+			[yY]* ) echo ""
+
+				sudo systemctl restart mmdvmhost.service
+				echo ""
+				echo "MMDVMHOST has been restarted."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MMDVMHOST RESTART executed at $timestamp1 " >> $LOGFILE
+				break;;
+			[nN]* ) echo ""
+				break;;
+			* ) 	echo "Please enter Y or N.";;
+			esac
+		done
+
+	;;
+	14) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Are you sure you want to STOP MMDVMHost?  Y or N  '  stopmmdvmvar
+		case $stopmmdvmvar in
+			[yY]* ) echo ""
+				sudo systemctl stop mmdvmhost.service
+				echo ""
+				echo "STOPPPING MMDVMHOST....."
+				sleep 5
+				echo "MMDVMHOST has stopped."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MMDVMHOST STOP executed at $timestamp1 " >> $LOGFILE
+				break;;
+			[nN]* ) echo ""
+				break;;
+			* ) 	echo "Please enter Y or N.";;
+			esac
+		done
+	;;
+	15) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Are you sure you want to START MMDVMHost?  Y or N  '  stopmmdvmvar
+		case $stopmmdvmvar in
+			[yY]* ) echo ""
+				sudo systemctl start mmdvmhost.service
+				echo ""
+				echo "STARTING MMDVMHOST....."
+				sleep 5
+				echo "MMDVMHOST has started."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MMDVMHOST START executed at $timestamp1 " >> $LOGFILE
+				break;;
+			[nN]* ) echo ""
+				break;;
+			* ) 	echo "Please enter Y or N.";;
+			esac
+		done
+	;;
+	16) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Are you sure you want to install MMDVMHost-Dashboard to your Raspberry Pi?  Y or N  ' mmdvmhostdbvar
+		case $mmdvmhostdbvar in
+			[yY]* ) echo ""
+				echo "OK.  Installing MMDVMHost-Dashboard now."
+				echo ""
+					if [ -d /var/www/html ]; then
+						cd /var/www/html
+						sudo git clone https://github.com/dg9vh/MMDVMHost-Dashboard
+						echo ""
+						echo "MMDVMHost-Dashboard has been installed"
+						echo "To access MMDVMHost-Dashboard, please goto http://127.0.0.1/MMDVMHost-Dashboard"
+						echo ""
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) MMDVMHOST DASHBOARD INSTALL executed at $timestamp1 " >> $LOGFILE
+						sleep 5
+					elif [ -d /srv/http ]; then
+						cd /srv/http
+						sudo git clone https://github.com/dg9vh/MMDVMHost-Dashboard
+						echo ""
+						echo "MMDVMHost-Dashboard has been installed"
+						echo "To access MMDVMHost-Dashboard, please goto http://127.0.0.1/MMDVMHost-Dashboard"
+						echo ""
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) MMDVMHOST DASHBOARD INSTALL executed at $timestamp1 " >> $LOGFILE
+						sleep 5
+					else echo ""
+						echo "Sorry.  Webserver directory not found."
+						echo ""
+						sleep 5
+						
+					fi
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	17) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Are you sure you want to install BrandMeister-Dashboard to your Raspberry Pi?  Y or N  ' mmdvmhostdbvar
+		case $mmdvmhostdbvar in
+			[yY]* ) echo ""
+				echo "OK.  Installing BrandMeister-Dashboard now."
+				echo ""
+					if [ -d /var/www/html ]; then
+						cd /var/www/html
+						sudo git clone https://github.com/zarya/BrandMeister-Dashboard
+						echo ""
+						echo "BrandMeister-Dashboard has been installed"
+						echo "To access BrandMeister-Dashboard, please goto http://127.0.0.1/BrandMeister-Dashboard"
+						echo ""
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) BRANDMEISTER DASHBOARD INSTALL executed at $timestamp1 " >> $LOGFILE
+						sleep 5
+					elif [ -d /srv/http ]; then
+						cd /srv/http
+						sudo git clone https://github.com/zarya/BrandMeister-Dashboard
+						echo ""
+						echo "BrandMeister-Dashboard has been installed"
+						echo "To access BrandMeister-Dashboard, please goto http://127.0.0.1/BrandMeister-Dashboard"
+						echo ""
+						echo "$(cat /root/.fullname) $(cat /root/.callsign) BRANDMEISTER DASHBOARD INSTALL executed at $timestamp1 " >> $LOGFILE
+						sleep 5
+					else echo ""
+						echo "Sorry.  Webserver directory not found."
+						echo ""
+						sleep 5
+					fi
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	18) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to install WEB SERVICES?  Y or N  ' rpwvar
+		case $rpwvar in
+			[yY]* ) echo ""
+				echo "OK.  Installing WEB SERVICES.  PLEASE RELAX FOR A WHILE."
+				echo ""
+				if [ "$dist" == "Ubuntu" ]; then
+					echo ""
+					echo "OK.  OS is UBUNTU."
+					echo ""
+					echo "Proceeding to install APACHE2 WEB SERVER."
+					sudo apt-get install apache2 -y
+					sudo systemctl enable apache2
+					sudo systemctl start apache2
+					echo "APACHE2 WEB SERVER installed."
+					sleep 5
+					echo "Proceeding to install mysql-server and mysql-client."
+					echo "During installation, you will be asked to setup the MySQL root user password. Enter the password and press ENTER key."
+					echo "Re-enter the password and press ENTER key."
+					sleep 10
+					sudo apt-get install mysql-server mysql-client -y
+					echo "MYSQL-SERVER and MYSQL-CLIENT installed."
+					sleep 5
+					echo "Proceeding to install PHP."
+					sudo apt-get update 
+					sudo apt-get install php7.0-mysql php7.0-curl php7.0-json php7.0-cgi php7.0 libapache2-mod-php7.0 -y
+#					sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
+					sudo systemctl restart apache2
+					echo "PHP installed."
+					sleep 5
+				elif [ "$dist" == "Debian" ]; then
+					echo ""
+					echo "OK.  OS is DEBIAN JESSIE."
+					echo ""
+					echo "Proceeding to install APACHE2 WEB SERVER."
+					sudo apt-get install apache2 -y
+					sudo systemctl enable apache2
+					sudo systemctl start apache2
+					echo "APACHE2 WEB SERVER installed."
+					sleep 5
+					echo "Proceeding to install mysql-server and mysql-client."
+					echo "During installation, you will be asked to setup the MySQL root user password. Enter the password and press ENTER key."
+					echo "Re-enter the password and press ENTER key."
+					sleep 10
+					sudo apt-get install mysql-server mysql-client -y
+					sleep 5
+					echo "MYSQL-SERVER and MYSQL-CLIENT installed."
+					sleep 5
+					echo "Proceeding to install PHP."
+					sudo apt-get update 
+					sudo apt-get install php7.0-mysql php7.0-curl php7.0-json php7.0-cgi php7.0 libapache2-mod-php7.0 -y
+#					sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
+					sudo systemctl restart apache2
+					echo "PHP installed."
+					sleep 5
+				elif [ "$dist" == "Raspbian" ]; then
+					echo ""
+					echo "OK.  OS is RASPBIAN."
+					echo ""
+					echo "Proceeding to install APACHE2 WEB SERVER."
+					sudo apt-get install apache2 -y
+					sudo systemctl enable apache2
+					sudo systemctl start apache2
+					echo "APACHE2 WEB SERVER installed."
+					sleep 5
+					echo "Proceeding to install mysql-server and mysql-client."
+					echo "During installation, you will be asked to setup the MySQL root user password. Enter the password and press ENTER key."
+					echo "Re-enter the password and press ENTER key."
+					sleep 10
+					sudo apt-get install mysql-server mysql-client -y
+					echo "MYSQL-SERVER and MYSQL-CLIENT installed."
+					sleep 5
+					echo "Proceeding to install PHP."
+					sudo apt-get update 
+					sudo apt-get install php7.0-mysql php7.0-curl php7.0-json php7.0-cgi php7.0 libapache2-mod-php7.0 -y
+#					sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
+					sudo systemctl restart apache2
+					echo "PHP installed."
+					sleep 5
+				elif [ "$dist" == "Arch" ]; then
+					echo ""
+					echo "OK.  OS is ARCH LINUX."
+					echo ""
+					sudo pacman -Syu
+					sudo pacman -S apache
+					sudo systemctl enable httpd
+					sudo systemctl restart httpd
+					sudo pacman -S mysql
+					sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+					sudo systemctl enable mysqld
+					sudo systemctl restart mysqld
+					sudo mysql_secure_installation
+					sudo pacman -S php php-apache
+					sudo systemctl restart httpd
+					sleep 5
+				else
+					echo ""
+				fi	
+				
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) WEB SERVICES INSTALL executed at $timestamp1 " >> $LOGFILE
+				sleep 5
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+	
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	19) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'Would you like to change the password for root?  Y or N  ' rpwvar
+		case $rpwvar in
+			[yY]* ) echo ""
+				echo "OK.  Changing password for root."
+				echo ""
+				sudo passwd root
+				echo ""
+				echo "Password for root has been changed."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) ROOT PASSWORD CHANGE executed at $timestamp1 " >> $LOGFILE
+				sleep 5
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+	
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	20) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'ARE YOU SURE YOU WANT TO RESTART YOUR RASPBERRY PI?  Y or N  ' restartvar
+		case $restartvar in
+			[yY]* ) echo ""
+				echo "OK.  Restarting Raspberry Pi now."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) REBOOT executed at $timestamp1 " >> $LOGFILE
+				sudo reboot
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	21) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'ARE YOU SURE YOU WANT TO POWER OFF YOUR RASPBERRY PI?  Y or N  ' poweroffvar
+		case $poweroffvar in
+			[yY]* ) echo ""
+				echo "OK.  POWERING OFF Raspberry PI NOW."
+				echo ""
+				echo "GOODBYE!!!"
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) POWEROFF executed at $timestamp1 " >> $LOGFILE
+				sleep 5
+				sudo poweroff
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	22) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'ARE YOU SURE YOU WANT TO AUTOSTART MD380-UPDATE ON LOGIN?  Y or N  ' autostartvar
+		case $autostartvar in
+			[yY]* ) echo ""
+				echo "OK.  AUTOSTART MD380-UPDATE on login enabled."
+				echo ""
+				sudo echo "sudo ~/md380-radio/md380-update" >> ~/.bash_profile
+				echo "NEXT LOGIN WILL TAKE YOU STRAIGHT TO MD380-UPDATE MENU."
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) MD380-UPDATE AUTOSTART executed at $timestamp1 " >> $LOGFILE
+				sleep 5
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
+	;;
+	23) echo ""
+		while true
+		do
+		clear
+		timestamp1=`date --rfc-3339=seconds`
+		read -p 'ARE YOU SURE YOU WANT TO INSTALL DV4MF2 CONTROL PANEL FOR DV4MINI?  Y or N  ' dv4mf2var
+		case $dv4mf2var in
+			[yY]* ) echo ""
+				echo "OK.  DV4MF2 CONTROL PANEL will be installed for DV4MINI."
+				echo ""
+				cd ~Downloads
+				sudo wget http://42561.noip.us/DV4MF2.tgz
+				sudo tar zxvf DV4MF2.tgz
+					file1="/usr/bin/mono"
+					if [ -f $file1 ]; then
+						echo "Your operating system meets the requirement to run DV4MF2 control panel."
+						sleep 5 
+					else 
+						echo "Your operating system REQUIRES MONO to run DV4MF2 control panel."
+							while true
+							do
+							timestamp3=`date --rfc-3339=seconds`
+							read -p 'Would you like to install MONO?  Y or N  ' monovar
+							case $monovar in
+								[yY]* ) echo ""
+									echo "Ok MONO-Complete will be installed."
+									echo ""
+									sudo apt-get install mono-complete -y
+									echo ""
+									echo "Mono-Complete has been installed."
+									echo "$(cat /root/.fullname) $(cat /root/.callsign) MONO INSTALLATION executed at $timestamp3 " >> $LOGFILE
+									sleep 5
+									break;;
+								[nN]* ) echo ""
+									break;;
+								* )	echo "Please enter Y or N";;
+							esac
+							done
+						sleep 10
+					fi
+				
+				echo ""
+				echo "$(cat /root/.fullname) $(cat /root/.callsign) DV4MF2 INSTALLATION executed at $timestamp1 " >> $LOGFILE
+				sleep 5
+				break;;
+		
+			[nN]* ) echo ""
+				break;;
+
+			* )	echo "Please enter Y or N";;
+			esac
+		done
 	;;
 	99) echo ""
 		echo ""
