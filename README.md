@@ -93,7 +93,7 @@ The radio will re-start and you are done.
 
 How to enable some of the new features
 
-Enable Contact CSV mode: Menu,Utilities,MD380Tools,UserCSV,Enable
+Enable Contact CSV mode: Menu,Utilities,MD380Tools,Show Calls,TA&UserDB,Enable
 
 Enable last heard message instead of date: Menu,Utilities,MD380Tools,Date Format,Alt. Status
 
